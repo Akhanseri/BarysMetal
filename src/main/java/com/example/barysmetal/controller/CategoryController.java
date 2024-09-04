@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/categories")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController {
     private final CategoryService categoryService;
     private final FileStorageService fileStorageService;
