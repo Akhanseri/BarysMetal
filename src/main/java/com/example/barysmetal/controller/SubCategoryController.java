@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/subcategories")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -36,5 +38,10 @@ public class SubCategoryController {
 
         SubCategory savedSubCategory = subCategoryService.saveSubCategory(subCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSubCategory);
+    }
+
+    @GetMapping
+    public List<SubCategory> getAllSubCategories() {
+        return subCategoryService.getAllSubCategories();
     }
 }
