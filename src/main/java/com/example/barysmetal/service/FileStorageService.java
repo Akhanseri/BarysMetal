@@ -43,11 +43,12 @@ public class FileStorageService {
             // Добавляем метку времени к имени файла, чтобы сделать его уникальным
             String uniqueFileName = System.currentTimeMillis() + "-" + fileName;
 
-            // Копируем файл в целевую директорию (с заменой существующего файла с таким же именем)
+            // Сохраняем файл в целевую директорию
             Path targetLocation = this.fileStorageLocation.resolve(uniqueFileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return targetLocation.toString();
+            // Возвращаем виртуальный путь к файлу (/static/uniqueFileName)
+            return "/static/" + uniqueFileName;
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
         }

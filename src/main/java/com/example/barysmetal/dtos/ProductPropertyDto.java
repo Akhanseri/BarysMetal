@@ -1,5 +1,8 @@
 package com.example.barysmetal.dtos;
 
+import lombok.Builder;
+
+@Builder
 public class ProductPropertyDto {
     private String key;
     private String value;

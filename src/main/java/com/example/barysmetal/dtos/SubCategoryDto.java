@@ -1,15 +1,13 @@
 package com.example.barysmetal.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.awt.font.TextHitInfo;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 public class SubCategoryDto {
     public SubCategoryDto(Long id, String name, String photo) {
         this.id = id;

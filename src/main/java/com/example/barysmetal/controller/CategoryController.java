@@ -1,9 +1,6 @@
 package com.example.barysmetal.controller;
 
-import com.example.barysmetal.dtos.CategoryResponseDto;
-import com.example.barysmetal.dtos.ProductResponseDto;
-import com.example.barysmetal.dtos.SubCategoryDto;
-import com.example.barysmetal.dtos.SubCategoryResponseDto;
+import com.example.barysmetal.dtos.*;
 import com.example.barysmetal.model.Category;
 import com.example.barysmetal.model.Product;
 import com.example.barysmetal.repository.CategoryRepository;
@@ -41,10 +38,17 @@ public class CategoryController {
         List<CategoryResponseDto> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getSubCategoriesOrProducts(@PathVariable Long id) {
-        return categoryService.getSubCategoriesOrProducts(id);
+//    @GetMapping("/{id}")
+//    public ResponseEntity<?> getSubCategoriesOrProducts(@PathVariable Long id) {
+//        return categoryService.getSubCategoriesOrProducts(id);
+//    }
+
+    @GetMapping("/{categoryId}/")
+    public ResponseEntity<CategoryDetailsDto> getCategoryDetails(@PathVariable Long categoryId) {
+        CategoryDetailsDto categoryDetails = categoryService.getCategoryDetails(categoryId);
+        return ResponseEntity.ok(categoryDetails);
     }
+
     @GetMapping("/{categoryId}/sub/{subCategoryId}/products")
     public ResponseEntity<List<Product>> getProductsBySubCategory(@PathVariable Long categoryId, @PathVariable Long subCategoryId) {
         return categoryService.getProductsBySubCategory(categoryId, subCategoryId);

@@ -33,6 +33,7 @@ public class Product {
 
     private int price;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductProperty> productProperties = new ArrayList<>();
 
