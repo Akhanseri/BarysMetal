@@ -13,7 +13,7 @@ import java.util.List;
 public class CategoryDetailsDto {
     private Long id;
     private String name;
-    private String photo;
+    private String photoPath;
 
     private List<SubCategoryDto> subCategories = new ArrayList<>(); // List of subcategories
     private List<ProductDto> products = new ArrayList<>();          // List of direct products

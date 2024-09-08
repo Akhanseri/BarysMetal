@@ -54,6 +54,12 @@ public class CategoryController {
         return categoryService.getProductsBySubCategory(categoryId, subCategoryId);
     }
 
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.noContent().build(); // Возвращает статус 204 No Content
+    }
+
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Category> createCategory(

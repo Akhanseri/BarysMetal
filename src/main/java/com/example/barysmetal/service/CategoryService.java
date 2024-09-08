@@ -34,6 +34,15 @@ public class CategoryService {
         this.productPropertyRepository = productPropertyRepository;
     }
 
+    public void deleteCategory(Long categoryId) {
+        // Проверяем, существует ли категория
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+
+        // Логика удаления (удаление связи с продуктами и подкатегориями)
+        categoryRepository.delete(category);  // Удаляем категорию
+    }
+
 
 
 
@@ -78,7 +87,7 @@ public class CategoryService {
             return CategoryDetailsDto.builder()
                     .id(category.getId())
                     .name(category.getName())
-                    .photo(category.getPhoto())
+                    .photoPath(category.getPhoto())
                     .subCategories(subCategoryDtos)  // Return subcategories
                     .products(Collections.emptyList())  // Return empty product list
                     .build();
@@ -114,7 +123,7 @@ public class CategoryService {
             return CategoryDetailsDto.builder()
                     .id(category.getId())
                     .name(category.getName())
-                    .photo(category.getPhoto())
+                    .photoPath(category.getPhoto())
                     .subCategories(Collections.emptyList())  // Return empty subcategory list
                     .products(productDtos)  // Return products with properties if available
                     .build();

@@ -40,6 +40,12 @@ public class SubCategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSubCategory);
     }
 
+    @DeleteMapping("/{subCategoryId}")
+    public ResponseEntity<Void> deleteSubCategory(@PathVariable Long subCategoryId) {
+        subCategoryService.deleteSubCategory(subCategoryId);
+        return ResponseEntity.noContent().build();  // Возвращает статус 204 No Content
+    }
+
     @GetMapping
     public List<SubCategory> getAllSubCategories() {
         return subCategoryService.getAllSubCategories();
