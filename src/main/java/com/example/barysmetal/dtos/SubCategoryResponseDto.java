@@ -1,17 +1,15 @@
 package com.example.barysmetal.dtos;
 
-import org.springframework.core.io.Resource;
-
 
 public class SubCategoryResponseDto {
     private Long id;
     private String name;
-    private String photoUrl;  // URL для загрузки фото
+    private String photoPath;  // URL для загрузки фото
 
     public SubCategoryResponseDto(Long id, String name, String photoPath, String photoUrl) {
         this.id = id;
         this.name = name;
-        this.photoUrl = photoUrl;
+        this.photoPath = photoUrl;
     }
 
     // Геттеры и сеттеры
@@ -32,11 +30,11 @@ public class SubCategoryResponseDto {
     }
 
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPhotoPath() {
+        return photoPath;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 }

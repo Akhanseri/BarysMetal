@@ -1,5 +1,6 @@
 package com.example.barysmetal.controller;
 
+import com.example.barysmetal.dtos.SubCategoryDto;
 import com.example.barysmetal.model.Category;
 import com.example.barysmetal.model.SubCategory;
 import com.example.barysmetal.service.FileStorageService;
@@ -44,6 +45,12 @@ public class SubCategoryController {
     public ResponseEntity<Void> deleteSubCategory(@PathVariable Long subCategoryId) {
         subCategoryService.deleteSubCategory(subCategoryId);
         return ResponseEntity.noContent().build();  // Возвращает статус 204 No Content
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SubCategoryDto> getSubCategoryById(@PathVariable Long id) {
+        SubCategoryDto subCategoryDto = subCategoryService.getSubCategoryById(id);
+        return ResponseEntity.ok(subCategoryDto);
     }
 
     @GetMapping

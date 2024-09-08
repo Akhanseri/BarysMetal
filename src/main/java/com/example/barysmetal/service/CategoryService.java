@@ -80,7 +80,7 @@ public class CategoryService {
                     .map(subCategory -> SubCategoryDto.builder()
                             .id(subCategory.getId())
                             .name(subCategory.getName())
-                            .photo(subCategory.getPhoto())
+                            .photoPath(subCategory.getPhoto())
                             .build())
                     .collect(Collectors.toList());
 
