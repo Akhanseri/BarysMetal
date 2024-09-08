@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface ProductPropertyRepository extends JpaRepository<ProductProperty,Long> {
     List<ProductProperty> findByProduct(Product product);
+
+    void deleteByProductId(Long productId);
 }
 

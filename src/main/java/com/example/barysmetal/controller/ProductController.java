@@ -36,6 +36,13 @@ public class ProductController {
         this.objectMapper = objectMapper;
     }
 
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();  // Возвращает статус 204 No Content
+    }
+
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Product> createProduct(
             @RequestParam("name") String name,
