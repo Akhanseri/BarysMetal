@@ -1,9 +1,8 @@
 package com.example.barysmetal.controller;
 
-import com.example.barysmetal.dtos.ProductDto;
+import com.example.barysmetal.dtos.*;
 import com.example.barysmetal.repository.ProductRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.example.barysmetal.dtos.ProductPropertyDto;
 import com.example.barysmetal.model.Category;
 import com.example.barysmetal.model.Product;
 import com.example.barysmetal.model.ProductProperty;
@@ -47,34 +46,34 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductRequestDto> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
 
-        // Map Product to ProductDto and include properties
-        ProductDto productDto = mapToProductDto(product);
+        // Map Product to ProductDto and include category, subcategory, and properties
+        ProductRequestDto productDto = mapToProductDto(product);
 
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
 
+
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
+    public ResponseEntity<List<ProductRequestDto>> getAllProducts() {
+        // Retrieve all products from the service
         List<Product> products = productRepository.findAll();
 
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        // Map products to ProductDto list
-        List<ProductDto> productDtos = products.stream()
-                .map(this::mapToProductDto)
+        // Map each product to ProductRequestDto
+        List<ProductRequestDto> productDtos = products.stream()
+                .map(this::mapToProductDto) // Use the mapToProductDto method for each product
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(productDtos);
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
 
-    private ProductDto mapToProductDto(Product product) {
+
+    private ProductRequestDto mapToProductDto(Product product) {
+        // Map product properties
         List<ProductPropertyDto> propertyDtos = product.getProductProperties().stream()
                 .map(property -> ProductPropertyDto.builder()
                         .id(property.getId())
@@ -83,16 +82,36 @@ public class ProductController {
                         .build())
                 .collect(Collectors.toList());
 
-        return ProductDto.builder()
+        // Map category details
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(product.getCategory().getId())
+                .name(product.getCategory().getName())
+                .build();
+
+        // Map subcategory details if available
+        SubCategoryDto subCategoryAndCategoryDto = null;
+        if (product.getSubCategory() != null) {
+            subCategoryAndCategoryDto = SubCategoryDto.builder()  // Assign the subcategory here
+                    .id(product.getSubCategory().getId())
+                    .name(product.getSubCategory().getName())
+                    .photoPath(product.getSubCategory().getPhoto())
+                    .build();
+        }
+
+        return ProductRequestDto.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .description(product.getDescription())
                 .kaspi(product.getKaspi())
                 .photoPath(product.getPhotoPath())
+                .category(categoryDto) // Set category
+                .subCategory(subCategoryAndCategoryDto) // Set subcategory if available
                 .properties(propertyDtos)
                 .build();
     }
+
+
 
 
 
