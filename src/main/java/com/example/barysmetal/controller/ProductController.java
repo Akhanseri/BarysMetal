@@ -1,5 +1,6 @@
 package com.example.barysmetal.controller;
 
+import com.example.barysmetal.dtos.ProductDto;
 import com.example.barysmetal.repository.ProductRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.example.barysmetal.dtos.ProductPropertyDto;
@@ -46,19 +47,56 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+
+        // Map Product to ProductDto and include properties
+        ProductDto productDto = mapToProductDto(product);
+
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
+
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
         List<Product> products = productRepository.findAll();
+
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(products);
+
+        // Map products to ProductDto list
+        List<ProductDto> productDtos = products.stream()
+                .map(this::mapToProductDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(productDtos);
     }
+
+
+    private ProductDto mapToProductDto(Product product) {
+        List<ProductPropertyDto> propertyDtos = product.getProductProperties().stream()
+                .map(property -> ProductPropertyDto.builder()
+                        .id(property.getId())
+                        .key(property.getKey())
+                        .value(property.getValue())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ProductDto.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .description(product.getDescription())
+                .kaspi(product.getKaspi())
+                .photoPath(product.getPhotoPath())
+                .properties(propertyDtos)
+                .build();
+    }
+
+
+
+
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

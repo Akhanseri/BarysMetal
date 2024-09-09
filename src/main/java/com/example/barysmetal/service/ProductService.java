@@ -1,6 +1,8 @@
 package com.example.barysmetal.service;
 
 import com.example.barysmetal.dtos.ProductCategorySubCategoryDto;
+import com.example.barysmetal.dtos.ProductDto;
+import com.example.barysmetal.dtos.ProductPropertyDto;
 import com.example.barysmetal.model.Category;
 import com.example.barysmetal.model.Product;
 import com.example.barysmetal.model.SubCategory;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -32,25 +35,53 @@ public class ProductService {
     }
 
     public ProductCategorySubCategoryDto getProductsByCategoryAndSubCategory(Long categoryId, Long subCategoryId) {
-        // Fetch category
+        // Fetch the category
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + categoryId));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
-        // Fetch subcategory
+        // Fetch the subcategory
         SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + subCategoryId));
+                .orElseThrow(() -> new EntityNotFoundException("SubCategory not found"));
 
-        // Fetch products under the category and subcategory
+        // Fetch the products by category and subcategory
         List<Product> products = productRepository.findByCategoryIdAndSubCategoryId(categoryId, subCategoryId);
 
+        // Map products to ProductDto
+        List<ProductDto> productDtos = products.stream()
+                .map(this::mapToProductDto)  // Reuse the mapping method for products
+                .collect(Collectors.toList());
+
+        // Build the response DTO
         return ProductCategorySubCategoryDto.builder()
                 .categoryId(category.getId())
                 .categoryName(category.getName())
                 .subCategoryId(subCategory.getId())
                 .subCategoryName(subCategory.getName())
-                .products(products)
+                .products(productDtos)
                 .build();
     }
+
+    private ProductDto mapToProductDto(Product product) {
+        List<ProductPropertyDto> propertyDtos = product.getProductProperties().stream()
+                .map(property -> ProductPropertyDto.builder()
+                        .id(property.getId())
+                        .key(property.getKey())
+                        .value(property.getValue())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ProductDto.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .description(product.getDescription())
+                .kaspi(product.getKaspi())
+                .photoPath(product.getPhotoPath())
+                .properties(propertyDtos)
+                .build();
+    }
+
+
 
     public void deleteProduct(Long productId) {
         // Проверяем, существует ли продукт

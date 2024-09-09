@@ -55,13 +55,14 @@ public class CategoryController {
 
         ProductCategorySubCategoryDto responseDto = productService.getProductsByCategoryAndSubCategory(categoryId, subCategoryId);
 
-        if (responseDto.getProducts().isEmpty()) {
-            responseDto.setProducts(Collections.emptyList()); // return empty array instead of null or empty list
-            return ResponseEntity.ok(responseDto); // Return
+        // Ensure an empty array is returned for products if none are found
+        if (responseDto.getProducts() == null || responseDto.getProducts().isEmpty()) {
+            responseDto.setProducts(Collections.emptyList());
         }
 
         return ResponseEntity.ok(responseDto);
     }
+
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {

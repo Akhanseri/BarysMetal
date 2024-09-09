@@ -12,5 +12,5 @@ public class ProductCategorySubCategoryDto {
     private String categoryName;
     private Long subCategoryId;
     private String subCategoryName;
-    private List<Product> products;
+    private List<ProductDto> products;
 }
