@@ -71,6 +71,8 @@ public class ProductController {
             @RequestParam("kaspi") String kaspi,
             @RequestParam("file") MultipartFile file,
             @RequestParam("productProperties") String productPropertiesJson) { // JSON string
+        productPropertiesJson = productPropertiesJson.substring(1, productPropertiesJson.length() - 1);
+
 
         String filePath = fileStorageService.storeFile(file);
 
@@ -85,9 +87,6 @@ public class ProductController {
         }
         product.setPhotoPath(filePath);
 
-        if (productPropertiesJson.startsWith("\"") && productPropertiesJson.endsWith("\"")) {
-            productPropertiesJson = productPropertiesJson.substring(1, productPropertiesJson.length() - 1);
-        }
 
 
 
