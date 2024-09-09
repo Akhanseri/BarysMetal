@@ -1,6 +1,8 @@
 package com.example.barysmetal.service;
 
+import com.example.barysmetal.dtos.SubCategoryAndCategoryDto;
 import com.example.barysmetal.dtos.SubCategoryDto;
+import com.example.barysmetal.model.Category;
 import com.example.barysmetal.model.SubCategory;
 import com.example.barysmetal.repository.SubCategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,18 +33,24 @@ public class SubCategoryService {
         subCategoryRepository.delete(subCategory);  // Удаляем подкатегорию
     }
 
-    public SubCategoryDto getSubCategoryById(Long id) {
-        // Ищем подкатегорию по ID
+    public SubCategoryAndCategoryDto getSubCategoryById(Long id) {
+        // Find subcategory by ID
         SubCategory subCategory = subCategoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("SubCategory not found"));
 
-        // Возвращаем DTO объекта подкатегории
-        return SubCategoryDto.builder()
+        // Get the category details from the subcategory
+        Category category = subCategory.getCategory();
+
+        // Return DTO with category information
+        return SubCategoryAndCategoryDto.builder()
                 .id(subCategory.getId())
                 .name(subCategory.getName())
                 .photoPath(subCategory.getPhoto())
+                .categoryId(category.getId())  // Add category ID
+                .categoryName(category.getName())  // Add category name
                 .build();
     }
+
 
     public SubCategory saveSubCategory(SubCategory subCategory) {
         return subCategoryRepository.save(subCategory);

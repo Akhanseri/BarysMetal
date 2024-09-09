@@ -1,5 +1,6 @@
 package com.example.barysmetal.controller;
 
+import com.example.barysmetal.dtos.SubCategoryAndCategoryDto;
 import com.example.barysmetal.dtos.SubCategoryDto;
 import com.example.barysmetal.model.Category;
 import com.example.barysmetal.model.SubCategory;
@@ -48,10 +49,11 @@ public class SubCategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubCategoryDto> getSubCategoryById(@PathVariable Long id) {
-        SubCategoryDto subCategoryDto = subCategoryService.getSubCategoryById(id);
-        return ResponseEntity.ok(subCategoryDto);
+    public ResponseEntity<SubCategoryAndCategoryDto> getSubCategoryById(@PathVariable Long id) {
+        SubCategoryAndCategoryDto subCategoryAndCategoryDto = subCategoryService.getSubCategoryById(id);
+        return ResponseEntity.ok(subCategoryAndCategoryDto);
     }
+
 
     @GetMapping
     public List<SubCategory> getAllSubCategories() {
