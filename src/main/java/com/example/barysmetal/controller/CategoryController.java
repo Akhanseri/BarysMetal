@@ -2,21 +2,17 @@ package com.example.barysmetal.controller;
 
 import com.example.barysmetal.dtos.*;
 import com.example.barysmetal.model.Category;
-import com.example.barysmetal.model.Product;
 import com.example.barysmetal.repository.CategoryRepository;
 import com.example.barysmetal.service.CategoryService;
 import com.example.barysmetal.service.FileStorageService;
+import com.example.barysmetal.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -24,11 +20,13 @@ import java.util.stream.Collectors;
 public class CategoryController {
     private final CategoryService categoryService;
     private final FileStorageService fileStorageService;
+    private final ProductService productService;
     private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryService categoryService, FileStorageService fileStorageService, CategoryRepository categoryRepository) {
+    public CategoryController(CategoryService categoryService, FileStorageService fileStorageService, ProductService productService, CategoryRepository categoryRepository) {
         this.categoryService = categoryService;
         this.fileStorageService = fileStorageService;
+        this.productService = productService;
         this.categoryRepository = categoryRepository;
     }
 
@@ -49,9 +47,18 @@ public class CategoryController {
         return ResponseEntity.ok(categoryDetails);
     }
 
-    @GetMapping("/{categoryId}/sub/{subCategoryId}/products")
-    public ResponseEntity<List<Product>> getProductsBySubCategory(@PathVariable Long categoryId, @PathVariable Long subCategoryId) {
-        return categoryService.getProductsBySubCategory(categoryId, subCategoryId);
+    @GetMapping("/category/{categoryId}/subcategory/{subCategoryId}")
+    public ResponseEntity<ProductCategorySubCategoryDto> getProductsByCategoryAndSubCategory(
+            @PathVariable Long categoryId,
+            @PathVariable Long subCategoryId) {
+
+        ProductCategorySubCategoryDto responseDto = productService.getProductsByCategoryAndSubCategory(categoryId, subCategoryId);
+
+        if (responseDto.getProducts().isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{categoryId}")
