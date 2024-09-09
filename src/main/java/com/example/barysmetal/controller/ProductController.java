@@ -85,6 +85,12 @@ public class ProductController {
         }
         product.setPhotoPath(filePath);
 
+        if (productPropertiesJson.startsWith("\"") && productPropertiesJson.endsWith("\"")) {
+            productPropertiesJson = productPropertiesJson.substring(1, productPropertiesJson.length() - 1);
+        }
+
+
+
         // Convert JSON string to List<ProductPropertyDto>
         List<ProductPropertyDto> productProperties;
         try {

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -55,7 +56,8 @@ public class CategoryController {
         ProductCategorySubCategoryDto responseDto = productService.getProductsByCategoryAndSubCategory(categoryId, subCategoryId);
 
         if (responseDto.getProducts().isEmpty()) {
-            return ResponseEntity.notFound().build();
+            responseDto.setProducts(Collections.emptyList()); // return empty array instead of null or empty list
+            return ResponseEntity.ok(responseDto); // Return
         }
 
         return ResponseEntity.ok(responseDto);
