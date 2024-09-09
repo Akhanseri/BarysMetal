@@ -1,5 +1,6 @@
 package com.example.barysmetal.controller;
 
+import com.example.barysmetal.repository.ProductRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.example.barysmetal.dtos.ProductPropertyDto;
 import com.example.barysmetal.model.Category;
@@ -26,12 +27,14 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
     private final FileStorageService fileStorageService;
     private final ObjectMapper objectMapper; // Jackson ObjectMapper for JSON parsing
 
     @Autowired
-    public ProductController(ProductService productService, FileStorageService fileStorageService, ObjectMapper objectMapper) {
+    public ProductController(ProductService productService, ProductRepository productRepository, FileStorageService fileStorageService, ObjectMapper objectMapper) {
         this.productService = productService;
+        this.productRepository = productRepository;
         this.fileStorageService = fileStorageService;
         this.objectMapper = objectMapper;
     }
@@ -46,6 +49,15 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(products);
     }
 
 
