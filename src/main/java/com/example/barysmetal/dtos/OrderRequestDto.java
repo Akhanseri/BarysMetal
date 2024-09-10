@@ -1,10 +1,7 @@
 package com.example.barysmetal.dtos;
 
 import com.example.barysmetal.model.enums.PaymentType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,18 +9,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class OrderRequestDto {
-
-    private String deliveryMethod; // Replaced deliveryType with deliveryMethod
-    private PaymentType paymentMethod; // Renamed to paymentMethod
+    private String deliveryMethod;
+    private String paymentMethod;
     private String deliveryAddress;
     private int deliveryFloor;
     private String deliveryComment;
-
     private String recipientFullName;
     private String recipientPhone;
     private String recipientEmail;
+    private String recipientComment;
     private String recipientCompany;
-    private List<Long> productIds; // Added product IDs for the order
-
+    private List<Long> productIds;
 }

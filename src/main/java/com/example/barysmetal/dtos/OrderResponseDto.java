@@ -1,8 +1,6 @@
 package com.example.barysmetal.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,12 +8,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class OrderResponseDto {
-
-    private Long orderId;
-    private LocalDateTime orderTime;
+    private Long id;
+    private LocalDateTime time;
     private String deliveryType;
     private String deliveryAddress;
-    private String recipientName;
+    private String recipientFullName;
     private List<String> productNames;
 }

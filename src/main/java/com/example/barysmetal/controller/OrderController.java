@@ -18,8 +18,12 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto) {
-        OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderResponseDto);
+        try {
+            OrderResponseDto orderResponse = orderService.createOrder(orderRequestDto);
+            return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

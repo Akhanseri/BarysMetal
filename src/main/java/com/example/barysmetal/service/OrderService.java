@@ -7,6 +7,7 @@ import com.example.barysmetal.model.OrderDelivery;
 import com.example.barysmetal.model.OrderRecipient;
 import com.example.barysmetal.model.Product;
 import com.example.barysmetal.model.enums.DeliveryType;
+import com.example.barysmetal.model.enums.PaymentType;
 import com.example.barysmetal.repository.OrderDeliveryRepository;
 import com.example.barysmetal.repository.OrderRecipientRepository;
 import com.example.barysmetal.repository.OrderRepository;
@@ -40,11 +41,11 @@ public class OrderService {
         recipient.setPhone(orderRequestDto.getRecipientPhone());
         recipient.setEmail(orderRequestDto.getRecipientEmail());
         recipient.setCompany(orderRequestDto.getRecipientCompany());
+        recipient.setComment(orderRequestDto.getRecipientComment());
         recipient = orderRecipientRepository.save(recipient);
 
         // Create delivery
         OrderDelivery delivery = new OrderDelivery();
-        delivery.setType(DeliveryType.valueOf(orderRequestDto.getDeliveryMethod())); // Using deliveryMethod
         delivery.setAddress(orderRequestDto.getDeliveryAddress());
         delivery.setFloor(orderRequestDto.getDeliveryFloor());
         delivery.setComment(orderRequestDto.getDeliveryComment());
@@ -54,10 +55,24 @@ public class OrderService {
         Order order = new Order();
         order.setRecipient(recipient);
         order.setDelivery(delivery);
-        order.setPaymentType(orderRequestDto.getPaymentMethod()); // Using paymentMethod
+
+        // Convert the delivery method string to uppercase and ensure it matches the enum
+        try {
+            order.setDeliveryType(DeliveryType.valueOf(orderRequestDto.getDeliveryMethod().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid delivery method: " + orderRequestDto.getDeliveryMethod());
+        }
+
+        // Ensure payment method matches enum
+        try {
+            order.setPaymentType(PaymentType.valueOf(orderRequestDto.getPaymentMethod().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid payment method: " + orderRequestDto.getPaymentMethod());
+        }
+
         order.setTime(LocalDateTime.now());
 
-        // Retrieve and set products (optional based on business logic)
+        // Retrieve and set products
         List<Product> products = productRepository.findAllById(orderRequestDto.getProductIds());
         order.setProducts(products);
 
@@ -67,7 +82,7 @@ public class OrderService {
         return new OrderResponseDto(
                 savedOrder.getId(),
                 savedOrder.getTime(),
-                savedOrder.getDelivery().getType().name(),
+                savedOrder.getDeliveryType().name(),
                 savedOrder.getDelivery().getAddress(),
                 savedOrder.getRecipient().getFullName(),
                 products.stream().map(Product::getName).collect(Collectors.toList())
@@ -75,4 +90,6 @@ public class OrderService {
     }
 
 }
+
+
 

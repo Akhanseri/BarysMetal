@@ -16,9 +16,6 @@ public class OrderDelivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private DeliveryType type;
-
     private String address;
 
     private int floor;
