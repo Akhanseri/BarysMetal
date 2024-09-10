@@ -1,5 +1,6 @@
 package com.example.barysmetal.controller;
 
+import com.example.barysmetal.dtos.ApplicationRequestDto;
 import com.example.barysmetal.model.Application;
 import com.example.barysmetal.repository.ApplicationRepository;
 import org.springframework.http.HttpStatus;
@@ -23,10 +24,16 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<Application> createApplication(@RequestBody Application application) {
+    public ResponseEntity<Application> createApplication(@RequestBody ApplicationRequestDto applicationDto) {
+        Application application = new Application();
+        application.setFullName(applicationDto.getFullName());
+        application.setNumber(applicationDto.getNumber());
+        application.setComment(applicationDto.getComment()); // Optional field
+
         Application createdApplication = applicationRepository.save(application);
         return new ResponseEntity<>(createdApplication, HttpStatus.CREATED);
     }
+
 
 
 }
