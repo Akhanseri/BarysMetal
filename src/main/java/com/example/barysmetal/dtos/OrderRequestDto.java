@@ -14,14 +14,8 @@ import java.util.List;
 @Getter
 public class OrderRequestDto {
 
-    private String deliveryType; // Добавлено поле для типа доставки
-
-
-    private Long deliveryId;
-    private PaymentType paymentType;
-    private Long recipientId;
-    private List<Long> productIds;
-
+    private String deliveryMethod; // Replaced deliveryType with deliveryMethod
+    private PaymentType paymentMethod; // Renamed to paymentMethod
     private String deliveryAddress;
     private int deliveryFloor;
     private String deliveryComment;
@@ -30,5 +24,6 @@ public class OrderRequestDto {
     private String recipientPhone;
     private String recipientEmail;
     private String recipientCompany;
-    private String recipientComment;
+    private List<Long> productIds; // Added product IDs for the order
+
 }

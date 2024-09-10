@@ -34,37 +34,36 @@ public class OrderService {
     private ProductRepository productRepository;
 
     public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
-        // Создание получателя
+        // Create recipient
         OrderRecipient recipient = new OrderRecipient();
         recipient.setFullName(orderRequestDto.getRecipientFullName());
         recipient.setPhone(orderRequestDto.getRecipientPhone());
         recipient.setEmail(orderRequestDto.getRecipientEmail());
         recipient.setCompany(orderRequestDto.getRecipientCompany());
-        recipient.setComment(orderRequestDto.getRecipientComment());
         recipient = orderRecipientRepository.save(recipient);
 
-        // Создание доставки
+        // Create delivery
         OrderDelivery delivery = new OrderDelivery();
-        delivery.setType(DeliveryType.valueOf(orderRequestDto.getDeliveryType()));
+        delivery.setType(DeliveryType.valueOf(orderRequestDto.getDeliveryMethod())); // Using deliveryMethod
         delivery.setAddress(orderRequestDto.getDeliveryAddress());
         delivery.setFloor(orderRequestDto.getDeliveryFloor());
         delivery.setComment(orderRequestDto.getDeliveryComment());
         delivery = orderDeliveryRepository.save(delivery);
 
-        // Создание заказа
+        // Create order
         Order order = new Order();
         order.setRecipient(recipient);
         order.setDelivery(delivery);
-        order.setPaymentType(orderRequestDto.getPaymentType());
+        order.setPaymentType(orderRequestDto.getPaymentMethod()); // Using paymentMethod
         order.setTime(LocalDateTime.now());
 
-        // Продукты
+        // Retrieve and set products (optional based on business logic)
         List<Product> products = productRepository.findAllById(orderRequestDto.getProductIds());
         order.setProducts(products);
 
         Order savedOrder = orderRepository.save(order);
 
-        // Ответ
+        // Response
         return new OrderResponseDto(
                 savedOrder.getId(),
                 savedOrder.getTime(),
@@ -74,5 +73,6 @@ public class OrderService {
                 products.stream().map(Product::getName).collect(Collectors.toList())
         );
     }
+
 }
 
